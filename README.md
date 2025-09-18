@@ -1,0 +1,2 @@
+# Hospital Bed and Resource Utilization Forecasting System
+The Hospital Bed & Resource Utilization Forecasting System is an end-to-end business intelligence solution designed to help healthcare administrators optimize capacity planning and resource allocation. Using historical admission data from Riyadh hospitals, the system provides accurate predictions for future bed demand through multiple forecasting approaches.
