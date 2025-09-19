@@ -1137,7 +1137,8 @@ class HospitalDashboard:
             forecast_days = st.slider("Forecast Days", 7, 60, 30)
         
         with col2:
-            available_models = ["Random Forest", "XGBoost", "ARIMA"]
+            available_models = ["Random Forest", "XGBoost"]
+            # available_models = ["Random Forest", "XGBoost", "ARIMA"]
             if hasattr(self.forecaster, 'models') and self.forecaster.models:
                 available_models = [m for m in available_models if m in self.forecaster.models]
             
