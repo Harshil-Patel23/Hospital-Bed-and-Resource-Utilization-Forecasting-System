@@ -725,7 +725,7 @@
 #     main()
 
 
-
+# original 
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -1119,7 +1119,7 @@ class HospitalDashboard:
                     # Try to load results
                     try:
                         import pickle
-                        with open('hospital_forecast_model_results.pkl', 'rb') as f:
+                        with open('results.pkl', 'rb') as f:
                             results = pickle.load(f)
                             self.forecaster.predictions = results.get('predictions', {})
                             self.forecaster.metrics = results.get('metrics', {})
@@ -1137,11 +1137,16 @@ class HospitalDashboard:
             forecast_days = st.slider("Forecast Days", 7, 60, 30)
         
         with col2:
-            available_models = ["Random Forest", "XGBoost"]
-            # available_models = ["Random Forest", "XGBoost", "ARIMA"]
-            if hasattr(self.forecaster, 'models') and self.forecaster.models:
-                available_models = [m for m in available_models if m in self.forecaster.models]
+            # available_models = ["Random Forest", "XGBoost"]
+            # # available_models = ["Random Forest", "XGBoost", "ARIMA"]
+            # if hasattr(self.forecaster, 'models') and self.forecaster.models:
+            #     available_models = [m for m in available_models if m in self.forecaster.models]
             
+            # model_type = st.selectbox("Select Model", available_models)
+            available_models = ["Random Forest", "XGBoost"]
+            model_key_map = {"Random Forest": "RandomForest", "XGBoost": "XGBoost"}
+            if hasattr(self.forecaster, 'models') and self.forecaster.models:
+                available_models = [name for name in available_models if model_key_map[name] in self.forecaster.models]
             model_type = st.selectbox("Select Model", available_models)
         
         with col3:
@@ -1182,12 +1187,14 @@ class HospitalDashboard:
             if not hasattr(self.forecaster, 'daily_data') or self.forecaster.daily_data is None:
                 self.forecaster.prepare_time_series_data()
             
+            model_key_map = {"Random Forest": "RandomForest", "XGBoost": "XGBoost", "ARIMA": "ARIMA"}
+            model_key = model_key_map.get(model_type, model_type)
             # Generate forecast based on model type
-            if model_type == "ARIMA" and 'ARIMA' in self.forecaster.models:
+            if model_key == "ARIMA" and 'ARIMA' in self.forecaster.models:
                 return self.generate_arima_forecast(forecast_days)
-            elif model_type == "Random Forest" and 'RandomForest' in self.forecaster.models:
+            elif model_key == "RandomForest" and 'RandomForest' in self.forecaster.models:
                 return self.generate_rf_forecast(forecast_days)
-            elif model_type == "XGBoost" and 'XGBoost' in self.forecaster.models:
+            elif model_key == "XGBoost" and 'XGBoost' in self.forecaster.models:
                 return self.generate_xgb_forecast(forecast_days)
             else:
                 return None
@@ -1834,7 +1841,7 @@ def main():
     # Header
     st.markdown("""
     # 🏥 Hospital Bed & Resource Utilization Forecasting System
-    ### Riyadh Hospital Admissions Analysis & Prediction Dashboard
+    ### Hospital Admissions Analysis & Prediction Dashboard
     """)
     
     # Initialize dashboard
